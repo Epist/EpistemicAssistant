@@ -8,6 +8,10 @@ def mostRelevantDocs(textToCompare, numResults):
         - A corpus stored on disk instead of in memory
         - A way to update the corpus without needing to fully recompute the model
         - A way to get similarity data without reloading and reforming the corpus
+        
+    Package dependencies:
+        - gensim
+        
     """
 
     from gensim import corpora, models, similarities

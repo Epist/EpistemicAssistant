@@ -1,4 +1,5 @@
 def importWordDocuments(directory):
+    from nlpDoc import nlpDoc
     from docx import Document
     import os.path
     import sys
@@ -7,18 +8,20 @@ def importWordDocuments(directory):
     #directory = "/Users/Larry/Code/EpistemicAssistant/sampleWordDocs/" #forDebugging
     files = os.listdir(directory)
     
-    docs = []
+    docs=[]
     for file in files:
         extension = os.path.splitext(directory+file)[1]
         if extension == '.docx':
-            docs.append(Document(directory+file))
-    
+            currentWordDoc = Document(directory+file)
+            currentDoc = nlpDoc(extractDocumentText(currentWordDoc))
+            currentDoc.documentType = 'Word'
+            currentDoc.filename = directory+file
+            docs.append(currentDoc)
+            
     #Extract plaintext from document
-    docTexts=[]
-    for doc in docs:
-        docTexts.append(extractDocumentText(doc))
+
   
-    return docTexts 
+    return docs 
     
 def extractDocumentText(doc):
     doctext = ''

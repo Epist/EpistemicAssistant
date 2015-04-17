@@ -11,22 +11,13 @@ def getDocumentCorpus(directory):
     
     #Load documents
     #documents = a list of document objects which include metadata as well as a plaintext capture of the document
-    docTexts = wordDocumentHandlers.importWordDocuments(directory)
-    
+    documents = wordDocumentHandlers.importWordDocuments(directory)
     # remove common words and tokenize
-    tokenizedTexts=[]
-    for text in docTexts:
-        tokenizedTexts.append(cleanAndTokenize(text))
-        #wordCounts.append(nltk.FreqDist(word_tokenize(text)))
 
     #Create a set of documents each of which contains a tokenized text, a raw text, and a filename 
-    documents = []
-    for index, docText in enumerate(docTexts):
-        currentDoc = nlpDoc(docText)
-        currentDoc.tokenizedText = tokenizedTexts[index]
-        currentDoc.documentType='Word' #Migrate this to the wordDocumentHandlers
+    for index, currentDoc in enumerate(documents):
+        currentDoc.tokenizedText = cleanAndTokenize(currentDoc.rawText)
         #currentDoc.filename = #[Can't do this until I fix the wordDocumentHandlers
-        documents.append(currentDoc)
       
     return documents
     #return wordCounts
