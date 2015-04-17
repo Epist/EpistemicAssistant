@@ -1,7 +1,7 @@
 def getDocumentCorpus(directory):
     from nlpDoc import nlpDoc
     import wordDocumentHandlers
-    import nltk
+    #import nltk
     #from nltk.util import ngrams
     from nltk.tokenize import word_tokenize
     from gensim import corpora, models, similarities
@@ -14,27 +14,18 @@ def getDocumentCorpus(directory):
     docTexts = wordDocumentHandlers.importWordDocuments(directory)
     
     # remove common words and tokenize
-    stoplist = set('for an a of the and to in it is '.split())
-    
-    wordCounts = []
-    fixedTexts=[]
-    #Count word frequencies
-    #ngramMax=1;
+    tokenizedTexts=[]
     for text in docTexts:
-        #Build a dictionary or a hashmap of the word counts
-        fixedTexts.append(fixString(text))
+        tokenizedTexts.append(cleanAndTokenize(text))
         #wordCounts.append(nltk.FreqDist(word_tokenize(text)))
-        
-    tokenizedTexts = [[word for word in document.lower().split() if word not in stoplist]
-            for document in fixedTexts]
-        
 
-    #Want to create a set of documents each of which contains a tokenized text, a raw text, and a filename 
+    #Create a set of documents each of which contains a tokenized text, a raw text, and a filename 
     documents = []
     for index, docText in enumerate(docTexts):
         currentDoc = nlpDoc(docText)
         currentDoc.tokenizedText = tokenizedTexts[index]
-        #currentDoc.filename = 
+        currentDoc.documentType='Word' #Migrate this to the wordDocumentHandlers
+        #currentDoc.filename = #[Can't do this until I fix the wordDocumentHandlers
         documents.append(currentDoc)
       
     return documents
@@ -45,6 +36,12 @@ def fixString(text):
     import re
     text=text.encode('ascii','replace')
     return re.sub('[():;,.\'`\"1234567890?!]',' ',text)
-    #Removes characters 
-    #Use str() to transform from unicode to ASCII
+    #Removes characters and converts to ascii
     #Need to add more to make this work better
+    
+def cleanAndTokenize(text):
+    stoplist = set('an a and are as at be by for from has he in is it its of on that the to was were will with'.split())
+    
+    text = fixString(text)
+    tokenizedText = [word for word in text.lower().split() if word not in stoplist]
+    return tokenizedText
