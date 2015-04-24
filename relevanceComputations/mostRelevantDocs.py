@@ -1,4 +1,6 @@
 def mostRelevantDocs(textToCompare, numResults):
+
+    
     """This function takes in a text string and a number of document results and
     returns the numResults most relevant documents to the text string using a predefined
     corpus and a hierarchical dirichlet process topic model
@@ -8,6 +10,7 @@ def mostRelevantDocs(textToCompare, numResults):
         - A corpus stored on disk instead of in memory
         - A way to update the corpus without needing to fully recompute the model
         - A way to get similarity data without reloading and reforming the corpus
+        - A way to use n-grams and more complex features
         
     Package dependencies:
         - gensim
@@ -16,7 +19,7 @@ def mostRelevantDocs(textToCompare, numResults):
 
     from gensim import corpora, models, similarities
     import logging
-    from getDocSparseVector import *
+    from getDocSparseVector import getDocumentCorpus, cleanAndTokenize
     #reload(getDocSparseVector)
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     #Use heirarchical dirichlet allocation topic modeling from gensim to compute the relevance between documents
@@ -38,7 +41,11 @@ def mostRelevantDocs(textToCompare, numResults):
     mainDocument = documentDictionary.doc2bow(cleanAndTokenize(textToCompare))
                 
     #Computes the HDA/nonparametric topic models
-    hdp = models.HdpModel(corpus, id2word=documentDictionary)   
+    if 'hdp' in locals():
+        print 'HDP already built. Using existing model'
+    else:
+        hdp = models.HdpModel(corpus, id2word=documentDictionary)
+     
     corpusHdp = hdp[corpus]
     mainDocumentHdp = hdp[mainDocument]
     num_feat = len(documentDictionary.values()) #To get rid of warning, manually retreive dictionary feature size

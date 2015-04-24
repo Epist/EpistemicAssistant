@@ -1,22 +1,27 @@
 def importWordDocuments(directory):
     from nlpDoc import nlpDoc
     from docx import Document
-    import os.path
-    import sys
+    import os
+    import fnmatch
     
-    #This should be the sample list of word documents
-    #directory = "/Users/Larry/Code/EpistemicAssistant/sampleWordDocs/" #forDebugging
-    files = os.listdir(directory)
+    """This function finds all of the (.docx) word documents in a folder recursively
+    and creates associated nlpDoc objects to return"""
+        
+    #Recursively crawls directory and gets all word documents
+    files = []
+    for root, dirnames, filenames in os.walk(directory):
+        for filename in fnmatch.filter(filenames, '*.docx'):
+            files.append(os.path.join(root, filename))
     
+    #Opens the word documents, extracts the text, and builds nlpDocs 
     docs=[]
     for file in files:
-        extension = os.path.splitext(directory+file)[1]
-        if extension == '.docx':
-            currentWordDoc = Document(directory+file)
-            currentDoc = nlpDoc(extractDocumentText(currentWordDoc))
-            currentDoc.documentType = 'Word'
-            currentDoc.filename = directory+file
-            docs.append(currentDoc)
+        currentWordDoc = Document(file)
+        currentDoc = nlpDoc(extractDocumentText(currentWordDoc))
+        currentDoc.documentType = 'MS Word'
+        currentDoc.fullFilename = file
+        currentDoc.filename = os.path.splitext(os.path.basename(file))[0]
+        docs.append(currentDoc)
             
     #Extract plaintext from document
 
