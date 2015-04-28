@@ -27,12 +27,11 @@ def mostRelevantDocs(textToCompare, numResults):
     
     directory= "/Users/Larry/Code/EpistemicAssistant/sampleWordDocs/"
     #Imports a set of comparison documents and tokenizes them
-
+    #Should not need to rebuild the corpus at each request...    
     documents = getDocumentCorpus(directory) #Get document objects
     texts =[]
     for doc in documents:
         texts.append(doc.tokenizedText)
-        #There has got to be a better way to do this...
     
     documentDictionary = corpora.Dictionary(texts)
     corpus = [documentDictionary.doc2bow(text) for text in texts]

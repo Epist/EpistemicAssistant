@@ -16,12 +16,15 @@ def importWordDocuments(directory):
     #Opens the word documents, extracts the text, and builds nlpDocs 
     docs=[]
     for file in files:
-        currentWordDoc = Document(file)
-        currentDoc = nlpDoc(extractDocumentText(currentWordDoc))
-        currentDoc.documentType = 'MS Word'
-        currentDoc.fullFilename = file
-        currentDoc.filename = os.path.splitext(os.path.basename(file))[0]
-        docs.append(currentDoc)
+        try:
+            currentWordDoc = Document(file)
+            currentDoc = nlpDoc(extractDocumentText(currentWordDoc))
+            currentDoc.documentType = 'MS Word'
+            currentDoc.fullFilename = file
+            currentDoc.filename = os.path.splitext(os.path.basename(file))[0]
+            docs.append(currentDoc)
+        except:
+            pass
             
     #Extract plaintext from document
 

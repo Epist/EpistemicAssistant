@@ -1,6 +1,7 @@
 def getDocumentCorpus(directory):
     from nlpDoc import nlpDoc
     import wordDocumentHandlers
+    from reutersDocumentHandlers import importReutersDocuments
     #import nltk
     #from nltk.util import ngrams
     from nltk.tokenize import word_tokenize
@@ -11,14 +12,18 @@ def getDocumentCorpus(directory):
     
     #Load documents
     #documents = a list of document objects which include metadata as well as a plaintext capture of the document
-    documents = wordDocumentHandlers.importWordDocuments(directory)
+    wordDocuments = wordDocumentHandlers.importWordDocuments(directory)
+    #reutersDocuments = importReutersDocuments('/Users/Larry/Code/EpistemicAssistant/reuters')
+    documents = wordDocuments# + reutersDocuments
     # remove common words and tokenize
 
     #Create a set of documents each of which contains a tokenized text, a raw text, and a filename 
     for index, currentDoc in enumerate(documents):
-        currentDoc.tokenizedText = cleanAndTokenize(currentDoc.rawText)
-        #currentDoc.filename = #[Can't do this until I fix the wordDocumentHandlers
-      
+        try:
+            currentDoc.tokenizedText = cleanAndTokenize(currentDoc.rawText)
+            #currentDoc.filename = #[Can't do this until I fix the wordDocumentHandlers
+        except:
+            currentDoc.tokenizedText=['']
     return documents
     #return wordCounts
     #return sparseVecRepresentation
@@ -32,7 +37,8 @@ def fixString(text):
     
 def cleanAndTokenize(text):
     stoplist = set('an a and are as at be by for from has he in is it its of on that the to was were will with'.split())
-    
+    #text = text.replace('\xfc', ' ')#Deal with rediculous characters
+    text = text.encode('UTF-8','ignore')
     text = fixString(text)
     tokenizedText = [word for word in text.lower().split() if word not in stoplist]
     return tokenizedText

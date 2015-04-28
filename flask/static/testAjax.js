@@ -6,7 +6,7 @@ function updateText(){
      //the variable is defined
         currentUserText = document.getElementById("textEntry").value;
         stringDistance=getEditDistance(pastUserText,currentUserText);
-        if (stringDistance>10){
+        if (stringDistance>5){
             getSuggestions()
             pastUserText = currentUserText;
         }
@@ -25,7 +25,8 @@ function getSuggestions(){
 
         // The data to send (will be converted to a query string)
         data: {
-            inputText: document.getElementById("textEntry").value
+            inputText: document.getElementById("textEntry").value,
+            numberOfDocs: '4'//Need to set the number of documents in a different way
         },
 
         // Whether this is a POST or GET request
@@ -37,10 +38,13 @@ function getSuggestions(){
         // Code to run if the request succeeds;
         // the response is passed to the function
         success: function( responseData ) {
+            generateSuggestionPanels(responseData);
             var panel = document.getElementById('testPanel');
-            panel.innerHTML = responseData.text1;
+            panel.innerHTML = responseData.texts[0];
             var title = document.getElementById('testTitle');
-            title.innerHTML = responseData.title1;
+            title.innerHTML = responseData.titles[0];
+            document.getElementById('testPanel2').innerHTML=responseData.texts[1]
+            document.getElementById('testTitle2').innerHTML=responseData.titles[1]
         },
 
         // Code to run if the request fails; the raw request and
