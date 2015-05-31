@@ -16,9 +16,19 @@ function generateSuggestionPanels(responseData){
         else{
             currentSidebar = rightSideHtml;
         }
-        currentSidebar +=
-            '<div class="panel panel-success">' +
-                    '<div class="panel-heading">' +
+        if (responseData.docTypes[i] == 'MS Word'){
+            currentSidebar += '<div class="panel panel-success">'
+        }
+        else if (responseData.docTypes[i] == 'Reuters'){
+            currentSidebar += '<div class="panel panel-info">'
+        }
+        else if (responseData.docTypes[i] == 'PDF'){
+            currentSidebar += '<div class="panel panel-warning">'
+        }
+        else{
+            currentSidebar += '<div class="panel panel-default">'
+        }
+        currentSidebar +=  '<div class="panel-heading">' +
                         '<h3 class="panel-title" id="testTitle">';
         currentSidebar += responseData.titles[i];
         currentSidebar +=  '</h3>' +

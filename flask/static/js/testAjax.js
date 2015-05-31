@@ -4,18 +4,33 @@ function updateText(){
     
     if (typeof pastUserText !== 'undefined') {
      //the variable is defined
-        currentUserText = document.getElementById("textEntry").value;
-        stringDistance=getEditDistance(pastUserText,currentUserText);
-        if (stringDistance>5){
-            getSuggestions()
-            pastUserText = currentUserText;
-        }
+        //currentUserText = document.getElementById("textEntry").value;
+        currentUserText = stripHTML(document.getElementById("textEntry").innerHTML);
+
         
+        //currentUserText = tinyMCE.activeEditor.getContent({format : 'text'});
+        //stringDistance=getEditDistance(pastUserText,currentUserText);
+        //if (stringDistance>5){
+        //    getSuggestions()
+        //    pastUserText = currentUserText;
+        truncatedText = smartTruncate(currentUserText);
+        if (pastUserText != truncatedText){//This checks if a word has been added and updates if it has
+            getSuggestions()
+            pastUserText = truncatedText;
+        }
     }
     else{
-        pastUserText = document.getElementById("textEntry").value;
-        getSuggestions()
+        pastUserText = smartTruncate(stripHTML(document.getElementById("textEntry").innerHTML));
+        //getSuggestions()
     }
+}
+function stripHTML(someHTML){
+    var regex = /(<([^>]+)>)/ig;
+    someHTML = someHTML.replace(/<p>/gi, " ");
+    someHTML = someHTML.replace(/<br>/gi, " ");
+    someHTML = someHTML.replace(/&nbsp;/gi, " ");
+    var result = someHTML.replace(regex, "");
+    return result;
 }
 function getSuggestions(){
     $.ajax({
@@ -25,7 +40,7 @@ function getSuggestions(){
 
         // The data to send (will be converted to a query string)
         data: {
-            inputText: document.getElementById("textEntry").value,
+            inputText: stripHTML(document.getElementById("textEntry").innerHTML),
             numberOfDocs: '4'//Need to set the number of documents in a different way
         },
 
@@ -39,12 +54,12 @@ function getSuggestions(){
         // the response is passed to the function
         success: function( responseData ) {
             generateSuggestionPanels(responseData);
-            var panel = document.getElementById('testPanel');
-            panel.innerHTML = responseData.texts[0];
-            var title = document.getElementById('testTitle');
-            title.innerHTML = responseData.titles[0];
-            document.getElementById('testPanel2').innerHTML=responseData.texts[1]
-            document.getElementById('testTitle2').innerHTML=responseData.titles[1]
+            //var panel = document.getElementById('testPanel');
+            //panel.innerHTML = responseData.texts[0];
+            //var title = document.getElementById('testTitle');
+            //title.innerHTML = responseData.titles[0];
+            //document.getElementById('testPanel2').innerHTML=responseData.texts[1]
+            //document.getElementById('testTitle2').innerHTML=responseData.titles[1]
         },
 
         // Code to run if the request fails; the raw request and
@@ -98,3 +113,11 @@ function getEditDistance(a, b) {
  
   return matrix[b.length][a.length];
 };
+
+
+function smartTruncate(str){
+    index = str.lastIndexOf(' ');
+    str = str.substring(0,index);
+    str = str.trim()
+    return str;
+}

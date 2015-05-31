@@ -1,0 +1,20 @@
+body {
+    padding-top: 50px;
+    background-color: whitesmoke
+}
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+.panel-body {
+    text-align: left;
+    font-size: 90%;
+}
+.panel {
+    
+}
+#textEntry{
+    background-color: white;
+    min-height: 200px;
+    text-align: left;
+}

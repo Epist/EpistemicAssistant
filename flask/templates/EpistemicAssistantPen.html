@@ -10,6 +10,8 @@
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/epistemicAssistant.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/pen.css') }}" rel="stylesheet">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,6 +19,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
   </head>
   <body>
     <div class="starter-template">
@@ -42,8 +45,9 @@
             </div>
             <div class="col-md-6">
                 <div>
-                    <h1>Epistemic Assistant  <br><small>enter text below</small></h1>
-                    <textarea class="form-control" id="textEntry" rows="20" cols="100" oninput="updateText()"></textarea>
+                    <h1>Epistemic Assistant  <br></h1>
+                    <div id="textEntry" data-toggle="pen" data-placeholder="Enter text here" class="pen" contenteditable="true"      oninput="updateText()"></div>
+                    <!--<textarea class="form-control" id="textEntry" rows="20" cols="100" oninput="updateText()"></textarea>-->
                     <h5 id=statusText></h5>
                 </div>
             </div>
@@ -71,7 +75,7 @@
     <!--Can I put all of my scripts here?-->
     <script src={{url_for('static', filename='generateSuggestionPanels.js')}}>
     </script>
-    <script src={{url_for('static', filename='testAjax.js')}}>
+    <script src={{url_for('static', filename='js/testAjax.js')}}>
     </script>
     
 
@@ -88,6 +92,27 @@
             $("#statusText").html("");
         });
     </script>
+      
+    <script src={{url_for('static', filename='js/markdown.js')}}></script>
+    <script src={{url_for('static', filename='js/pen.js')}}></script>
+    <script type="text/javascript">
+        var options = {
+        //editor: document.getElementById('textEntry'), // {DOM Element} [required]
+        editor: document.querySelector('[data-toggle="pen"]'),
+        class: 'pen', // {String} class of the editor,
+        debug: false, // {Boolean} false by default
+        textarea: '<textarea name="textEntry"></textarea>', // fallback for old browsers
+        list: ['insertimage', 'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
+      'indent', 'outdent', 'bold', 'italic', 'underline', 'createlink'] // editor menu list
+            
+            }
+        var editor = new Pen(options);
+          // create editor
+        var pen = window.pen = new Pen(options);
+
+  pen.focus();
+    </script>
+    
       
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src={{ url_for('static', filename='js/bootstrap.min.js') }}></script>
